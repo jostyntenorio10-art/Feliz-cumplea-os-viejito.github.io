@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz cumple viejito</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap');
+
+      body {
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg,#ff4eba, #ff6cc5, #ffaade);
+        min-height: 100vh;
+        color: black;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .carta {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 700px;
+        width: 100%;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .floating-objects {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .ball {
+        position: absolute;
+        color: #ff69b4;
+        font-size: 20px;
+        opacity: 0.3;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      .content { position: relative; z-index: 2; }
+
+      .title {
+        font-family: 'Dancing Script', cursive;
+        font-size: 2.5em;
+        color: #d63384;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .message {
+        font-size: 1.2em;
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .soccer-objects {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0;
+      }
+
+      .big-ball-btn {
+        background: none; border: none; cursor: pointer;
+        padding: 0; position: relative; display: inline-block;
+        outline: none; -webkit-tap-highlight-color: transparent;
+      }
+
+      .big-ball-btn:focus-visible { outline: 3px dashed #d63384; border-radius: 50%; }
+
+      .big-ball {
+        font-size: 180px;
+        display: block;
+        animation: ballbeat 2s ease-in-out infinite;
+        text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        transition: transform 0.1s ease;
+        user-select: none;
+      }
+
+      .big-ball-btn:active .big-ball { transform: scale(0.88); }
+
+      /* counter badge */
+      .counter-badge {
+        position: absolute;
+        top: 8px; right: 8px;
+        background: linear-gradient(135deg, #ff4eba, #d63384);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.7em;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(214,51,132,0.4);
+        pointer-events: none;
+        z-index: 3;
+        transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      }
+
+      .counter-badge.bump {
+        transform: scale(1.35);
+      }
+
+      .hint-text {
+        text-align: center;
+        font-size: 0.78em;
+        color: #d63384;
+        margin-top: -10px;
+        letter-spacing: 1px;
+        animation: blink 2s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+
+      .sparkles {
+        position: absolute;
+        width: 300px; height: 300px;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      .sparkle {
+        position: absolute;
+        font-size: 20px;
+        color: #ff1493;
+        opacity: 0;
+        animation: sparkle 3s ease-in-out infinite;
+      }
+
+      @keyframes ballbeat {
+        0%, 100% { transform: scale(1) translateY(0px); }
+        30% { transform: scale(1.1) translateY(0px); }
+        10% { transform: scale(1) translateY(20px); }
+      }
+
+      @keyframes sparkle {
+        0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+        50% { opacity: 1; transform: scale(1) rotate(180deg); }
+      }
+
+      .signature {
+        text-align: right;
+        margin-top: 30px;
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.5em;
+        color: #d63384;
+      }
+
+      /* ---- CONFETTI ---- */
+      .confetti-particle {
+        position: fixed;
+        pointer-events: none;
+        font-size: 24px;
+        z-index: 9999;
+      }
+
+      /* ---- BURST RING ---- */
+      .burst-ring {
+        position: fixed;
+        border-radius: 50%;
+        border: 3px solid #ff69b4;
+        pointer-events: none;
+        z-index: 9998;
+        animation: burstRing 0.6s ease-out forwards;
+      }
+
+      @keyframes burstRing {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+      }
+
+      /* ---- POPUP ---- */
+      .popup-msg {
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: linear-gradient(135deg, #ff4eba, #ff6cc5);
+        color: white;
+        font-family: 'Dancing Script', cursive;
+        font-size: 2em;
+        padding: 20px 36px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(255,78,186,0.5);
+        z-index: 10000;
+        pointer-events: none;
+        white-space: nowrap;
+        animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      }
+
+      @keyframes popIn {
+        0% { transform: translate(-50%, -50%) scale(0) rotate(-5deg); opacity: 0; }
+        100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+      }
+
+      .popup-msg.fade-out {
+        animation: popOut 0.35s ease-in forwards;
+      }
+
+      @keyframes popOut {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+      }
+
+      /* ---- LAST CLICK GLOW on ball ---- */
+      .big-ball.last-glow {
+        animation: lastGlow 0.6s ease-in-out 3;
+      }
+
+      @keyframes lastGlow {
+        0%, 100% { text-shadow: 0 0 20px rgba(255,105,180,0.5); }
+        50% { text-shadow: 0 0 60px rgba(255,20,147,1), 0 0 100px rgba(255,78,186,0.8); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="carta">
+      <div class="floating-objects">
+        <div class="ball" style="top:10%;left:10%;">⚽</div>
+        <div class="ball" style="top:20%;left:80%;">✨</div>
+        <div class="ball" style="top:60%;left:5%;">🍾</div>
+        <div class="ball" style="top:70%;left:85%;">🍷</div>
+        <div class="ball" style="top:30%;left:90%;">🎉</div>
+      </div>
+
+      <!-- click counter badge -->
+      <div class="counter-badge" id="counterBadge">0 / 40 clicks</div>
+
+      <div class="content">
+        <h1 class="title">FELIIIZ CUMPLEE PAA:</h1>
+
+        <div class="message">
+          ¡Feliz cumpleeee pa hoy celebramos tu nacimiento🥳<br>
+          Hoy celebro que tu llegaste a mi vida y agradezco por cada dia que disfruto a tu lado.<br>
+          Gracias por existir, felices 36<br>
+          Nunca olvides que te quiero como a un padre para mi. Gracias por todo 🤗🍾.
+        </div>
+
+        <div class="soccer-objects">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <button class="big-ball-btn" id="ballBtn" aria-label="¡Dale click para celebrar!">
+              <span class="big-ball" id="bigBall">⚽
+                <div class="sparkles">
+                  <div class="sparkle" style="top:10%;left:20%;">✨</div>
+                  <div class="sparkle" style="top:20%;left:80%;">⭐</div>
+                  <div class="sparkle" style="top:70%;left:10%;">🎊</div>
+                  <div class="sparkle" style="top:80%;left:85%;">✨</div>
+                  <div class="sparkle" style="top:30%;left:90%;">🎉</div>
+                  <div class="sparkle" style="top:60%;left:75%;">💫</div>
+                </div>
+              </span>
+            </button>
+            <p class="hint-text" id="hintText">¡Dale click a la pelota! 🎉</p>
+          </div>
+        </div>
+
+        <div class="signature">—️el cantinflas 😂</div>
+      </div>
+    </div>
+
+    <script>
+      const TOTAL_CLICKS = 40;
+
+      const messages = [
+        "🎂 ¡Feliz Cumple Pa! 🎂",
+        "🥳 ¡36 y con más flow! 🥳",
+        "⚽ ¡El mejor del mundo! ⚽",
+        "🍾 ¡A brindar se dijo! 🍾",
+        "🎉 ¡Que los cumpla feliz! 🎉",
+        "💫 ¡Eres un crack! 💫",
+        "🎊 ¡Viva el cumpleañero! 🎊",
+        "❤️ ¡Te queremos mucho! ❤️",
+        "🥂 ¡Salud, pa! 🥂",
+        "🌟 ¡El rey del día! 🌟",
+        "🔥 ¡Modo leyenda activado! 🔥",
+        "🎈 ¡Hoy manda el cumpleañero! 🎈",
+        "😎 ¡Más joven que nunca! 😎",
+        "🏆 ¡El número uno siempre! 🏆",
+        "🎶 ¡Que no pare la fiesta! 🎶",
+        "🚀 ¡A romperla este año! 🚀",
+        "🍻 ¡Hoy se celebra en grande! 🍻",
+        "✨ ¡Puro estilo, pa! ✨",
+        "🎁 ¡Te mereces todo lo bueno! 🎁",
+        "👑 ¡El patrón de la casa! 👑",
+        "💥 ¡36 años de puro power! 💥",
+        "🥳 ¡Hoy toca disfrutar! 🥳",
+        "🎂 ¡Sopla las velitas, crack! 🎂",
+        "🌎 ¡El más duro del planeta! 🌎",
+        "⚡ ¡Energía infinita hoy! ⚡",
+        "🎤 ¡El protagonista del día! 🎤",
+        "🍰 ¡Pastel y felicidad! 🍰",
+        "💙 ¡Orgullo de la familia! 💙",
+        "🎮 ¡Nivel 36 desbloqueado! 🎮",
+        "🌟 ¡Brillando más que nunca! 🌟",
+        "🎊 ¡Fiesta, risas y alegría! 🎊",
+        "🔥 ¡El verdadero MVP! 🔥",
+        "🥂 ¡Por muchos años más! 🥂",
+        "🎉 ¡Que viva el rey! 🎉",
+        "🚗 ¡Con todo el estilo siempre! 🚗",
+        "💫 ¡Imparable como siempre! 💫",
+        "🍾 ¡Hoy todo se vale! 🍾",
+        "⚽ ¡Golazo de cumpleaños! ⚽",
+        "🎵 ¡Suban la música! 🎵",
+        // Mensaje 40 — el último, redirige a sorpresa
+        "🎁 ¡Un click más y tendrás tu sorpresa! 🎁"
+      ];
+
+      const confettiEmojis = ["🎉","🎊","✨","⭐","💫","🌟","🎈","🎂","🍾","🥳","❤️","🎁","🪅","🫶"];
+
+      let msgIndex = 0;
+      let currentPopup = null;
+      let popupTimeout = null;
+
+      const btn = document.getElementById('ballBtn');
+      const bigBall = document.getElementById('bigBall');
+      const badge = document.getElementById('counterBadge');
+      const hintText = document.getElementById('hintText');
+
+      function updateBadge(n) {
+        badge.textContent = `${n} / ${TOTAL_CLICKS} clicks`;
+        badge.classList.remove('bump');
+        void badge.offsetWidth; // reflow
+        badge.classList.add('bump');
+        setTimeout(() => badge.classList.remove('bump'), 300);
+      }
+
+      function updateHint(n) {
+        const left = TOTAL_CLICKS - n;
+        if (left > 5) {
+          hintText.textContent = `¡Dale click a la pelota! 🎉`;
+        } else if (left > 1) {
+          hintText.textContent = `¡Solo ${left} clicks para la sorpresa! 🎁`;
+          hintText.style.color = '#c0392b';
+          hintText.style.fontWeight = '600';
+        } else if (left === 1) {
+          hintText.textContent = `⚠️ ¡Un click más para tu sorpresa!`;
+          hintText.style.color = '#c0392b';
+          hintText.style.fontSize = '0.95em';
+        }
+      }
+
+      btn.addEventListener('click', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        spawnBurstRing(cx, cy);
+        spawnConfetti(cx, cy);
+
+        const currentMsg = messages[msgIndex % messages.length];
+        const isLastClick = (msgIndex === TOTAL_CLICKS - 1);
+
+        showPopup(currentMsg, isLastClick);
+        msgIndex++;
+
+        updateBadge(msgIndex);
+        updateHint(msgIndex);
+
+        // Después del último click redirige a sorpresa.html
+        if (isLastClick) {
+          // Glow especial en la pelota
+          bigBall.classList.add('last-glow');
+          btn.disabled = true;
+
+          setTimeout(() => {
+            window.location.href = 'sorpresa.html';
+          }, 2200);
+        }
+      });
+
+      /* ---------- helpers ---------- */
+      function spawnBurstRing(cx, cy) {
+        const ring = document.createElement('div');
+        ring.className = 'burst-ring';
+        ring.style.left = cx + 'px';
+        ring.style.top = cy + 'px';
+        ring.style.width = '100px';
+        ring.style.height = '100px';
+        document.body.appendChild(ring);
+        setTimeout(() => ring.remove(), 700);
+      }
+
+      function spawnConfetti(cx, cy) {
+        const count = 22;
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          el.className = 'confetti-particle';
+          el.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+          const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.5;
+          const radius = 60 + Math.random() * 80;
+          const duration = 900 + Math.random() * 700;
+          el.style.left = cx + 'px';
+          el.style.top = cy + 'px';
+          el.style.fontSize = (16 + Math.random() * 22) + 'px';
+          el.style.transition = `transform ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94), opacity ${duration}ms ease`;
+          el.style.opacity = '1';
+          document.body.appendChild(el);
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              el.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius - 60}px) rotate(${Math.random() * 720 - 360}deg) scale(${0.5 + Math.random() * 0.5})`;
+              el.style.opacity = '0';
+            });
+          });
+
+          setTimeout(() => el.remove(), duration + 50);
+        }
+      }
+
+      function showPopup(text, isLast) {
+        if (currentPopup) {
+          currentPopup.remove();
+          clearTimeout(popupTimeout);
+          currentPopup = null;
+        }
+
+        const popup = document.createElement('div');
+        popup.className = 'popup-msg';
+        if (isLast) {
+          popup.style.fontSize = '1.6em';
+          popup.style.background = 'linear-gradient(135deg, #d63384, #ff4eba, #ffd700)';
+          popup.style.boxShadow = '0 10px 60px rgba(255,215,0,0.5)';
+        }
+        popup.textContent = text;
+        document.body.appendChild(popup);
+        currentPopup = popup;
+
+        const delay = isLast ? 2000 : 1800;
+        popupTimeout = setTimeout(() => {
+          popup.classList.add('fade-out');
+          setTimeout(() => {
+            popup.remove();
+            if (currentPopup === popup) currentPopup = null;
+          }, 380);
+        }, delay);
+      }
+    </script>
+  </body>
+</html>
